@@ -1,19 +1,34 @@
 # Class Routine Manager
 
-A desktop app for managing class schedules built with C++, Qt 6, and SQLite.
+Desktop app for managing class schedules — C++, Qt 6, SQLite.
 
-## Requirements
-- Qt 6.x (`brew install qt`)
-- CMake 3.16+ (`brew install cmake`)
-- Ninja (`brew install ninja`)
+## First time setup
 
-## Setup
-Clone the repo and build:
+**Mac:**
+```bash
 git clone git@github.com:SlimShanks/ClassRoutineManager.git
 cd ClassRoutineManager
-mkdir build && cd build
-cmake ..
-cmake --build .
+./setup-mac.sh
+```
+
+**Windows (run PowerShell as Administrator):**
+```powershell
+git clone git@github.com:SlimShanks/ClassRoutineManager.git
+cd ClassRoutineManager
+.\setup-windows.ps1
+```
+
+## Build and Run
+```bash
+cmake -B build
+cmake --build build
+
+# Mac
+./build/ClassRoutineManager
+
+# Windows
+.\build\ClassRoutineManager.exe
+```
 
 ## Tech Stack
 - C++17
