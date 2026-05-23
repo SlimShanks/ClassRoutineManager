@@ -1,0 +1,12 @@
+build/
+cmake-build-*/
+*.db
+.DS_Store
+CMakeCache.txt
+CMakeFiles/
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+.qt/
+*.user
+CMakePresets.json
