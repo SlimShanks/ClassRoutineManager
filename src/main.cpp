@@ -1,5 +1,7 @@
 #include <QApplication>  // Qt's app manager
 #include "mainwindow.h"  // import our menu so we can use MainWindow
+#include "dbmanager.h"
+
 
 int main(int argc, char* argv[])
 {
@@ -8,7 +10,13 @@ int main(int argc, char* argv[])
     // it handles the app lifecycle, events, etc
     // argc and argv are command line arguments passed from OS
 
-    MainWindow window;  
+    // create db  here
+    DBManager db("routine.db");
+    db.seedData();
+
+
+    MainWindow window(&db);
+
     // create our window using the class we defined
     // this calls MainWindow::MainWindow() constructor in mainwindow.cpp
 
