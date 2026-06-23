@@ -1,34 +1,34 @@
-#pragma once // include this header only once per compilation
+#pragma once
+#include <memory>
+#include "Config.h"
+#include "database/IDatabase.h"
+#include "services/AuthService.h"
+#include "services/TeacherService.h"
 
-#include <memory> // std::unique_ptr (owns objects, frees them automatically)
+namespace crm {
 
-#include "Config.h"                // the hardcoded settings bag
-#include "database/IDatabase.h"    // the database INTERFACE (swap feature /SQLite)
-#include "repositories/UserRepo.h" // user storage layer
-#include "services/AuthService.h"  // account logic layer
-
-namespace crm { // top-levelproject namespace
-
-// appcontext meana bridge between the frontend and the backend.
-// UI never builds a database it just holds ONE
-// appcontext and asks it for ready-made services
-// internally it owns the whole thing
 class AppContext {
-  public:
-    explicit AppContext(Config config); // rememberin hardcoded settings; does NOT connect yet
-    ~AppContext();                      // closes the database connection cleanly and neat
+public:
+    explicit AppContext(Config config);
+    ~AppContext();
 
-    // build everything open the DB, create tables, ,igrate,false if any step fails
     bool init();
+    bool isReady() const;
 
-    bool isReady() const; // true once init() has succeeded
-    // for auth services declaration to be left and also could be done here the auth should be
-    // defined
+    // returns LoginResult so frontend knows which dashboard to show
+    LoginResult login(const QString& username, const QString& password);
+    bool        registerUser(const QString& username, const QString& email,
+                             const QString& password, Role role);
 
-  private:
-    Config m_config;                           // hardcoded setting
-    std::unique_ptr<database::Idatabase> m_db; // owns the live DB connection
-    bool m_ready = false;                      // for 1 or 0 init() finished or not
-}; // end class AppContext
+    services::TeacherService* teacherService();
+    database::Idatabase*      db();
+
+private:
+    Config m_config;
+    std::unique_ptr<database::Idatabase>      m_db;
+    std::unique_ptr<services::AuthService>    m_auth;
+    std::unique_ptr<services::TeacherService> m_teachers;
+    bool m_ready = false;
+};
 
 } // namespace crm

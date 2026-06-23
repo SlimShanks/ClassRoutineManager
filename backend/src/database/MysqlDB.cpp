@@ -119,7 +119,7 @@ bool Mysqldb::migrate() {
             "  dirty      TINYINT NOT NULL DEFAULT 1,"
             "  deleted    TINYINT NOT NULL DEFAULT 0,"
             "  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
-            "  name       VARCHAR(120) NOT NULL,"
+            "  name       VARCHAR(120) NOT NULL"
             ")"))
         return false;
 
@@ -151,6 +151,20 @@ bool Mysqldb::migrate() {
                  "  subject      VARCHAR(120) NOT NULL"
                  ")"))
         return false;
+
+if (!execute(
+    "CREATE TABLE IF NOT EXISTS teachers ("
+    "  id           INT AUTO_INCREMENT PRIMARY KEY,"
+    "  user_id      INT NOT NULL UNIQUE,"
+    "  name         VARCHAR(120) NOT NULL,"
+    "  subject      VARCHAR(120) NOT NULL,"
+    "  department   VARCHAR(120) NOT NULL,"
+    "  days         VARCHAR(120) NOT NULL,"
+    "  start_time   TIME         NOT NULL,"
+    "  end_time     TIME         NOT NULL,"
+    "  FOREIGN KEY (user_id) REFERENCES users(id)"
+    ")"))
+    return false;
 
     Logger::info("Mysqldb: migrate() complete");
     return true;
