@@ -4,6 +4,8 @@
 #include "database/IDatabase.h"
 #include "services/AuthService.h"
 #include "services/TeacherService.h"
+#include "services/RoutineService.h"
+
 
 namespace crm {
 
@@ -22,12 +24,16 @@ public:
 
     services::TeacherService* teacherService();
     database::Idatabase*      db();
+    services::RoutineService* routineService();
+
 
 private:
     Config m_config;
     std::unique_ptr<database::Idatabase>      m_db;
     std::unique_ptr<services::AuthService>    m_auth;
     std::unique_ptr<services::TeacherService> m_teachers;
+    std::unique_ptr<services::RoutineService> m_routine;
+
     bool m_ready = false;
 };
 

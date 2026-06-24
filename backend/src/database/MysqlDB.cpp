@@ -152,19 +152,45 @@ bool Mysqldb::migrate() {
                  ")"))
         return false;
 
-if (!execute(
-    "CREATE TABLE IF NOT EXISTS teachers ("
-    "  id           INT AUTO_INCREMENT PRIMARY KEY,"
-    "  user_id      INT NOT NULL UNIQUE,"
-    "  name         VARCHAR(120) NOT NULL,"
-    "  subject      VARCHAR(120) NOT NULL,"
-    "  department   VARCHAR(120) NOT NULL,"
-    "  days         VARCHAR(120) NOT NULL,"
-    "  start_time   TIME         NOT NULL,"
-    "  end_time     TIME         NOT NULL,"
-    "  FOREIGN KEY (user_id) REFERENCES users(id)"
-    ")"))
-    return false;
+    if (!execute(
+            "CREATE TABLE IF NOT EXISTS teachers ("
+            "  id           INT AUTO_INCREMENT PRIMARY KEY,"
+            "  user_id      INT NOT NULL UNIQUE,"
+            "  name         VARCHAR(120) NOT NULL,"
+            "  subject      VARCHAR(120) NOT NULL,"
+            "  department   VARCHAR(120) NOT NULL,"
+            "  days         VARCHAR(120) NOT NULL,"
+            "  start_time   TIME         NOT NULL,"
+            "  end_time     TIME         NOT NULL,"
+            "  FOREIGN KEY (user_id) REFERENCES users(id)"
+            ")"))
+        return false;
+
+    // Routines table
+    if (!execute(
+        "CREATE TABLE IF NOT EXISTS routines ("
+        "  id        INT AUTO_INCREMENT PRIMARY KEY,"
+        "  program   VARCHAR(120) NOT NULL,"
+        "  section   VARCHAR(20)  NOT NULL,"
+        "  semester  INT          NOT NULL,"
+        "  year      INT          NOT NULL,"
+        "  UNIQUE KEY uniq_routine (program, section, semester, year)"
+        ")"))
+        return false;
+
+    // Routine slots table
+    if (!execute(
+        "CREATE TABLE IF NOT EXISTS routine_slots ("
+        "  id          INT AUTO_INCREMENT PRIMARY KEY,"
+        "  routine_id  INT          NOT NULL,"
+        "  teacher_id  INT          NOT NULL,"
+        "  day         VARCHAR(10)  NOT NULL,"
+        "  start_time  TIME         NOT NULL,"
+        "  end_time    TIME         NOT NULL,"
+        "  FOREIGN KEY (routine_id) REFERENCES routines(id),"
+        "  FOREIGN KEY (teacher_id) REFERENCES teachers(id)"
+        ")"))
+        return false;
 
     Logger::info("Mysqldb: migrate() complete");
     return true;

@@ -15,11 +15,16 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets Sql)
 # Frontend Executable
 # -------------------------
 add_executable(ClassRoutineManagerUI
-    main.cpp
-    src/MainWindow.cpp
+main.cpp
     src/MainWindow.cpp
     src/dialogs/AddTeacherDialog.cpp
     src/dialogs/TeacherListDialog.cpp
+    src/views/RoutineView.cpp
+    src/views/RoutineSetupWidget.cpp
+    src/views/RoutineGridWidget.cpp
+    src/views/TeacherBlockWidget.cpp
+    src/views/GridCanvas.h
+
 )
 
 target_include_directories(ClassRoutineManagerUI PRIVATE

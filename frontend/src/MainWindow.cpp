@@ -131,6 +131,12 @@ MainWindow::MainWindow(crm::AppContext* ctx, QWidget* parent)
     setupSignup();           // index 1
     setupAdminDashboard();   // index 2
     setupTeacherDashboard(); // index 3
+    // index 4
+    m_routineView = new RoutineView(m_ctx);
+    m_stack->addWidget(m_routineView);
+    connect(m_routineView, &RoutineView::backRequested, this, [this]{
+        m_stack->setCurrentIndex(2);
+    });
 
     m_stack->setCurrentIndex(0);
 }
@@ -282,8 +288,11 @@ void MainWindow::setupAdminDashboard()
         AddTeacherDialog dlg(m_ctx, this);
         dlg.exec();
     });
-    connect(m_btnMakeRoutine, &QPushButton::clicked, this,
-            []{ /* RoutineDialog — next */ });
+    
+    connect(m_btnMakeRoutine, &QPushButton::clicked, this, [this]{
+        m_stack->setCurrentIndex(4);
+    });
+
     connect(btnViewTeachers, &QPushButton::clicked, this, [this]{
         TeacherListDialog dlg(m_ctx, this);
         dlg.exec();
@@ -511,3 +520,4 @@ void MainWindow::onTeacherSubmit()
         QMessageBox::warning(this, "Error", "Could not save. Please try again.");
     }
 }
+

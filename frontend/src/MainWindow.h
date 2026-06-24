@@ -11,6 +11,7 @@
 
 #include "../../backend/src/appcontext.h"
 #include "../../backend/src/services/TeacherService.h"
+#include "views/RoutineView.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -57,4 +58,7 @@ private:
     QTimeEdit*        m_tEnd;
     QList<QCheckBox*> m_tDays;
     QPushButton*      m_tSubmit;
+
+    // routine view (index 4)
+    RoutineView* m_routineView;
 };

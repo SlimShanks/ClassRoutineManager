@@ -29,6 +29,7 @@ bool AppContext::init()
 
     m_auth     = std::make_unique<services::AuthService>(m_db.get());
     m_teachers = std::make_unique<services::TeacherService>(m_db.get());
+    m_routine = std::make_unique<services::RoutineService>(m_db.get());
 
     m_ready = true;
     utils::Logger::info("Backend ready");
@@ -50,5 +51,6 @@ bool AppContext::registerUser(const QString& username, const QString& email,
 
 services::TeacherService* AppContext::teacherService() { return m_teachers.get(); }
 database::Idatabase*      AppContext::db()             { return m_db.get(); }
+services::RoutineService* AppContext::routineService() { return m_routine.get(); }
 
 } // namespace crm
