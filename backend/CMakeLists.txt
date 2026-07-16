@@ -16,9 +16,9 @@ add_library(backend_lib STATIC
     src/database/SyncManager.cpp
     src/services/AuthService.cpp
     src/services/TeacherService.cpp
-    src/repositories/UserRepo.cpp
     src/utils/Logger.cpp
     src/services/RoutineService.cpp
+    src/services/ConflictService.cpp
 )
 
 target_include_directories(backend_lib PUBLIC

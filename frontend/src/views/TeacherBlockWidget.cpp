@@ -107,7 +107,8 @@ void GridBlockWidget::mouseMoveEvent(QMouseEvent* e)
 {
     if (m_resizing) {
         int dy = e->globalPosition().toPoint().y() - m_resizeStartY;
-        int newHeight = qMax(40, m_startHeight + dy);
+        int newHeight = m_startHeight + dy;
+        newHeight = qBound(kRowH * kMinRows, newHeight, kRowH * kMaxRows);
         resize(width(), newHeight);
     }
     QFrame::mouseMoveEvent(e);
@@ -118,7 +119,7 @@ void GridBlockWidget::mouseReleaseEvent(QMouseEvent* e)
     if (m_resizing) {
         m_resizing = false;
         setCursor(Qt::SizeVerCursor);
-        int rowSpan = qMax(1, height() / 40);
+        int rowSpan = qBound(kMinRows, height() / kRowH, kMaxRows);
         emit resizeFinished(m_slotId, rowSpan);
     }
     QFrame::mouseReleaseEvent(e);

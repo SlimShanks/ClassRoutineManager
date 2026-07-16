@@ -1,5 +1,6 @@
 #include "RoutineGridWidget.h"
 #include "TeacherBlockWidget.h"
+#include "../../../backend/src/services/ConflictService.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -152,6 +153,21 @@ bool RoutineGridWidget::eventFilter(QObject* watched, QEvent* ev)
         slot.startTime   = slotStart;
         slot.endTime     = slotEnd;
 
+        // ── conflict check: same teacher, same day, overlapping time, any routine ──
+        auto conflicts = m_ctx->conflictService()->checkConflict(
+            teacherId, slot.day, slotStart, slotEnd);
+
+        if (!conflicts.isEmpty()) {
+            const auto& c = conflicts.first();
+            QMessageBox::warning(this, "Teacher Conflict",
+                QString("%1 is already booked on %2 from %3 to %4\n(%5 - %6)")
+                    .arg(name, c.day,
+                         c.startTime.toString("h:mm ap"),
+                         c.endTime.toString("h:mm ap"),
+                         c.program, c.section));
+            return true;
+        }
+
         if (!m_ctx->routineService()->addSlot(slot)) {
             QMessageBox::warning(this, "Error", "Could not save slot.");
             return true;
@@ -171,10 +187,10 @@ void RoutineGridWidget::reload()
         c->deleteLater();
     auto sl = m_ctx->routineService()->getSlotsForRoutine(m_routineId);
     for (const auto& s : sl)
-        placeBlock(s.teacherId, s.teacherName, s.subject, s.day, s.startTime, s.endTime);
+        placeBlock(s.id, s.teacherId, s.teacherName, s.subject, s.day, s.startTime, s.endTime);
 }
 
-void RoutineGridWidget::placeBlock(int teacherId, const QString& name, const QString& subject,
+void RoutineGridWidget::placeBlock(int slotId, int teacherId, const QString& name, const QString& subject,
                                    const QString& day, const QTime& start, const QTime& end)
 {
     int col = m_days.indexOf(day);
@@ -185,6 +201,7 @@ void RoutineGridWidget::placeBlock(int teacherId, const QString& name, const QSt
     int rowSpan  = qMax(1, endRow - startRow);
 
     crm::services::RoutineSlot s;
+    s.id          = slotId;
     s.teacherId   = teacherId;
     s.teacherName = name;
     s.subject     = subject;
@@ -205,8 +222,26 @@ void RoutineGridWidget::placeBlock(int teacherId, const QString& name, const QSt
         reload();
     });
 
-    connect(block, &GridBlockWidget::resizeFinished, this, [this, day, start](int slotId, int rowSpan) {
+    connect(block, &GridBlockWidget::resizeFinished, this,
+            [this, day, start, teacherId](int slotId, int rowSpan) {
         QTime newEnd = start.addSecs(rowSpan * 1800);
+
+        // ── conflict check on resize, excluding this slot itself ──
+        auto conflicts = m_ctx->conflictService()->checkConflict(
+            teacherId, day, start, newEnd, slotId);
+
+        if (!conflicts.isEmpty()) {
+            const auto& c = conflicts.first();
+            QMessageBox::warning(this, "Teacher Conflict",
+                QString("Resize would overlap existing booking on %1 from %2 to %3\n(%4 - %5)")
+                    .arg(c.day,
+                         c.startTime.toString("h:mm ap"),
+                         c.endTime.toString("h:mm ap"),
+                         c.program, c.section));
+            reload();  // snap block back to its saved size
+            return;
+        }
+
         crm::services::RoutineSlot updated;
         updated.id        = slotId;
         updated.day       = day;

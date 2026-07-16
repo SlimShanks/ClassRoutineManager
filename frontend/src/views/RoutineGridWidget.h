@@ -17,7 +17,7 @@ protected:
 
 private:
     void reload();
-    void placeBlock(int teacherId, const QString& name, const QString& subject,
+    void placeBlock(int slotId, int teacherId, const QString& name, const QString& subject,
                     const QString& day, const QTime& start, const QTime& end);
 
     crm::AppContext* m_ctx;

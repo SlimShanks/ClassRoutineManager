@@ -48,7 +48,11 @@ protected:
 private:
     int  m_slotId;
     int  m_teacherId;
-    bool m_resizing    = false;
+    bool m_resizing     = false;
     int  m_resizeStartY = 0;
     int  m_startHeight  = 0;
+
+    static constexpr int kRowH    = 40; // must match RoutineGridWidget::kRowH (30 min per row)
+    static constexpr int kMinRows = 1;  // 30 minutes
+    static constexpr int kMaxRows = 6;  // 3 hours
 };
