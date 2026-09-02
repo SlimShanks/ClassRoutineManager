@@ -10,3 +10,13 @@ qrc_*.cpp
 .qt/
 *.user
 CMakePresets.json
+compile_commands.json
+.clang-format
+
+#for personalized folders
+.vscode/
+compile_commands.json
+.clang-format
+
+build/
+.vscode/c_cpp_properties.json  

@@ -1,0 +1,17 @@
+return {
+  -- Additional C++ backend tools
+  {
+    "Civitasv/cmake-tools.nvim",
+    ft = { "cmake" },
+    opts = {},
+  },
+
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    optional = true,
+    opts = {
+      ensure_installed = { "codelldb" },
+      automatic_setup = true,
+    },
+  },
+}

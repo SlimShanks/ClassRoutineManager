@@ -4,12 +4,14 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/opt/homebrew/opt/qt/include/**"
+                "/opt/homebrew/Cellar/qtbase/6.11.1/lib/QtCore.framework/Headers",
+                "/opt/homebrew/Cellar/qtbase/6.11.1/lib/QtSql.framework/Headers",
+                "/opt/homebrew/Cellar/qtbase/6.11.1/lib/QtWidgets.framework/Headers",
+                "/opt/homebrew/Cellar/qtbase/6.11.1/lib/QtGui.framework/Headers"
             ],
             "compilerPath": "/usr/bin/clang++",
             "cppStandard": "c++17",
-            "intelliSenseMode": "macos-clang-arm64",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "intelliSenseMode": "macos-clang-arm64"
         }
     ],
     "version": 4
